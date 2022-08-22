@@ -1,0 +1,827 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+.App {
+  text-align: center;
+}
+
+.App-logo {
+  height: 40vmin;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .App-logo {
+    animation: App-logo-spin infinite 20s linear;
+  }
+}
+
+.App-header {
+  background-color: #282c34;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+
+.App-link {
+  color: #61dafb;
+}
+
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+
+
+button {
+  cursor: pointer;
+  border: 0;
+}
+#root{
+  display: flex;    
+  align-items: center;
+  flex-direction: column;
+  margin-bottom: 1em;
+}
+
+/* navbar css start */
+.navbar{
+  width: 100%;
+  /*max-width: 1000px; */
+  background-color: greenyellow;
+  border-radius: 0.5em;
+  position: relative;
+  padding: 0.5em 1em;
+  display: flex;
+  justify-content: space-between;
+}
+.navbar-light {
+  background-color: white;
+  color: rgb(116, 116, 116);
+}
+.site-title {
+  margin: 0.5em;
+  color: rgb(29, 177, 29);
+  font-weight: bold;
+}
+.left-navbar {
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+.navbar-items {
+  display: flex;
+  /*float: right;*/
+  list-style-type: none;
+  margin: 0;
+
+}
+.navbar-item {
+  text-align: center;
+  margin: 0.5em;
+}
+.current-item {
+  /*color: rgb(82, 82, 82);*/
+  font-weight: bold;
+}
+
+/* navbar css end */
+
+
+/* homepage css start */
+.main-div {
+  width: 100%;
+  /*margin-top: 1em;*/
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap; 
+}
+.banner{
+  width: 100%;
+  padding: 2em;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-align: center;
+  background-color:#5CB85C;
+  /*background-color:rgb(255, 117, 255); */
+  color: white;
+  margin-bottom: 2em;
+  align-items: center;
+} 
+.banner-title {
+  margin: 0;
+  font-size: 3.5rem;
+  /* padding-bottom: 0.5em; */
+}
+.banner-text{
+  margin: 0;
+  padding: 0.5em 0;
+  font-size: 20px;
+  font-weight: 500;
+}
+.page{
+  display: flex;
+  width: calc(100% - 1em);
+  justify-content: center;
+  text-align: center;
+  /*background-color: gray;*/
+  box-sizing: border-box;
+  margin: 0.5em;
+  border-radius: 0.5em;
+  padding: 0 1em;
+}
+.feed{
+  display: flex;
+  flex-direction: column;
+
+}
+.page-right {
+  display: flex;
+  width: 30%;
+  flex-direction: column;
+  margin-left: 0.5em;
+}
+.tags-pane{
+  display: flex;
+  /* i think i dont know what does this flex do. */
+  flex-direction: column;
+  background-color: #f3f3f3;
+  border-radius: 0.2em;
+}
+.tags-head{
+  display: flex;
+  margin-left: 0.5em;
+}
+.tags{
+  display: flex;
+  flex-wrap: wrap;
+  margin-left: 0.5em;
+}
+.tag{
+  margin: 0.1rem;
+  margin-bottom: 0.2rem;
+  font: 0.7rem;
+  padding: 0.3rem 0.5rem 0.4rem;
+  background-color: #818a91;
+  border-radius: 1em;
+  color: white;
+  white-space: nowrap;
+}
+.active-tag{
+  background-color: #687077;
+}
+.tag:hover{
+  background-color: #687077;
+}
+.page-left {
+  display: flex;
+  flex-direction: column;
+  width: 70%;
+  
+  margin-right: 0.5em;
+}
+.article-cell{
+  display: flex;
+  flex-direction: column;
+  padding: 1.5em 0;
+  border-top: 1px rgb(161, 161, 161) solid;
+}
+.article-top{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+.article-title{
+  color: rgb(66, 66, 66);
+  display: flex;
+  text-align: left;
+  margin-bottom: 2px;
+}
+.article-content{
+  color: rgb(125, 125, 125);
+  display: flex;
+  text-align: left;
+}
+
+.feed-nav{
+  display: flex;
+  width: 100%;
+  padding: 0.2em;
+  color: #5CB85C;
+  background-color: white;
+  border-bottom: 1px solid rgb(185, 185, 185);
+  margin-bottom: -1px;
+}
+.feed-nav-item{
+  margin-left: 0.5em;
+  padding: 0.5em 1em;
+}
+.article-bottom{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;    
+  margin-top: 0.8em;
+}
+.article-tags{
+  display: flex;
+  flex-direction: row;
+}
+.article-tag{
+  padding: 0 0.5em;
+  border: 1px solid #ddd;
+  border-radius: 1em;
+  color: #aaa ;
+  background: none;
+  margin-right: 3px;
+  margin-bottom: 0.2rem;
+  padding: 0 0.6em;
+}
+.article-tag:hover{
+}
+.article-date{
+  color: #bbb;
+  font-size: 0.8rem;
+}
+/* homepage css end */
+
+/* start of user bar css */
+.article-preview-info{
+  display: flex;
+  flex-direction: row;
+}
+.article-user{
+  margin-left: 0.3em;
+}
+.article-user-name{
+  color: #5CB85C;
+  display: flex;
+  font-size: 0.9rem;
+}
+.article-date{
+  font-size: 0.6rem;
+}
+/* end of user bar css */
+
+
+
+/* start of sign up page */
+.sign-up-page{
+  background-color: white;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-align: center;
+  align-items: center;
+  margin-top: 1.5rem;
+}
+.sign-up-form{
+  width: 350px;
+}
+.sign-up-title{
+  margin-bottom: 0.5rem;
+  font-family: inherit;
+  font-weight: 500;
+  line-height: 1.1;
+}
+.sign-up-link{
+  color: #5CB85C;
+  text-decoration: none;
+  margin-bottom: 1rem;
+  line-height: 1.5;
+}
+.sign-up-input{
+  border: 2px solid;
+  color: #55595c;
+  padding: 0.75rem 1.5rem;
+  font-size: 1.25rem;
+  border-radius: 0.3rem;
+  
+  width: 100%;
+  line-height: 1.25;
+  color: #55595c;
+  background-color: #fff;
+  background-image: none;
+  background-clip: padding-box;
+  border: 1px solid rgba(0, 0, 0, 0.15);
+
+  display: block;
+  margin-inline-start: 2px;
+  margin-inline-end: 2px;
+  padding-block-start: 0.35em;
+  padding-inline-start: 0.75em;
+  padding-inline-end: 0.75em;
+  padding-block-end: 0.625em;
+  min-inline-size: min-content;
+
+  margin-bottom: 1rem;
+}
+.sign-up-input::placeholder{
+  color: rgb(163, 163, 163)
+}
+.sign-up-input:focus{
+  border-color: #66afe9;
+  outline: none;
+}
+.sign-up-email{}
+.sign-up-password{}
+.submit-container{
+
+  width: 100%;
+}
+.sign-up-submit{
+  float: right;
+  padding: 0.75rem 1.5rem;
+  font-size: 1.25rem;
+  border-radius: 0.3rem;
+  color: #fff;
+  background-color: #5CB85C;
+  border-color: #5CB85C;
+  font-weight: normal;
+  line-height: 1.25;
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: middle;
+  cursor: pointer;
+  user-select: none;
+  border: 1px solid transparent;
+  
+  margin-bottom: 1rem;
+}
+
+/* end of sign up page */
+
+/* stat of sign in page */
+
+
+.sign-in-page{
+  background-color: white;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-align: center;
+  align-items: center;
+  margin-top: 1.5rem;
+}
+.sign-in-form{
+  width: 350px;
+}
+.sign-in-title{
+  margin-bottom: 0.5rem;
+  font-family: inherit;
+  font-weight: 500;
+  line-height: 1.1;
+}
+.sign-in-link{
+  color: #5CB85C;
+  text-decoration: none;
+  margin-bottom: 1rem;
+  line-height: 1.5;
+}
+.input{
+  border: 2px solid;
+  color: #55595c;
+  padding: 0.75rem 1.5rem;
+  font-size: 1.25rem;
+  border-radius: 0.3rem;
+  
+  width: 100%;
+  line-height: 1.25;
+  color: #55595c;
+  background-color: #fff;
+  background-image: none;
+  background-clip: padding-box;
+  border: 1px solid rgba(0, 0, 0, 0.15);
+
+  display: block;
+
+  margin-bottom: 1rem;
+}
+.input::placeholder{
+  color: rgb(163, 163, 163)
+}
+.input:focus{
+  border-color: #66afe9;
+  outline: none;
+}
+.sign-up-email{}
+.sign-up-password{}
+.submit-container{
+  width: 100%;
+}
+.submit{
+  float: right;
+  padding: 0.75rem 1.5rem;
+  font-size: 1.25rem;
+  border-radius: 0.3rem;
+  color: #fff;
+  background-color: #5CB85C;
+  border-color: #5CB85C;
+  font-weight: normal;
+  line-height: 1.25;
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: middle;
+  cursor: pointer;
+  user-select: none;
+  border: 1px solid transparent;
+  
+  margin-bottom: 1rem;
+}
+/* end of sign in page */
+
+
+/* start of media queries for page padding
+// sizes: 546, 690, 910, 1100, */
+@media only screen and (max-width: 600px) {
+  .page, .navbar{
+    min-width: 200px;
+  }
+  .page{
+    align-items: center;
+    flex-direction: column;
+  }
+  .page-left, .page-right{
+    width: 90%; 
+    margin-left: 0.5em;
+    margin-right: 0.5em;
+  }
+}
+@media only screen and (min-width: 580px) {
+  .page, .navbar{
+    width: 100% ;
+    max-width: 546px ;
+  }
+}
+@media only screen and (min-width: 760px) {
+  .page, .navbar{
+    width: 100% ;
+    max-width: 710px ;
+  }
+}
+@media only screen and (min-width: 990px) {
+  .page, .navbar{
+    width: 100% ;
+    max-width: 910px ;
+  }
+}
+@media only screen and (min-width: 1200px) {
+  .page, .navbar{
+    width: 100% ;
+    max-width: 1100px;
+  }
+}
+/* end of media queries for page padding */
+
+textarea {
+  resize: vertical;
+}
+.form {
+  margin-top:0.5em;
+}
+.logout {
+  float:left;
+  margin-top:2em;
+  background-color: red;
+  font-size: 0.9em;
+  padding: 0.5em 1em
+}
+
+.user-pic{
+  width: 100px;
+  height: 100px;
+}
+#tags-loading {
+  margin: 1em;
+}
+#article-loading {
+  margin: 1em;
+}
+
+.no-article-error{
+  margin: 1em;
+}
+
+
+/* heart <3<3<3 */ 
+.heart {
+  background-color: #5CB85C;
+  display: inline-block;
+  height: 10px;
+  margin: 3px 10px 0  12px;
+  position: relative;
+  top: 0;
+  transform: rotate(-45deg);
+  width: 10px;
+}
+.heart:before,
+.heart:after {
+  content: "";
+  border-radius: 50%;
+  height: 10px;
+  position: absolute;
+  width: 10px;
+  background-color: #5CB85C;
+}
+.clicked-heart:before,
+.heart:before {
+  top: -5px;
+  left: 0;
+}
+.clicked-heart:after,
+.heart:after {
+  left: 5px;
+  top: 0;
+}
+.like-no{
+  color:#5CB85C;
+  margin-right: 5px;
+}
+.article-like-button{
+  display: flex;
+  padding: 0.3em;
+  height: 2em;
+  border: 1px;
+  border-radius: 0.3em;
+  border-color: #5CB85C;
+  border-style: solid;
+  background-color: white;
+}
+.article-like-button:active{
+  background-color: #5CB85C;
+}
+.article-like-button:active >.like-no{
+  background-color: #5CB85C;
+  color: white ;
+}
+.article-like-button:active >.heart{
+  background-color: white;
+}
+.article-like-button:active >div:before{
+  background-color: white;
+}
+.article-like-button:active >div:after{
+  background-color: white;
+}
+/* selected-button
+
+ */
+
+/* BİR DAHA ASLA ELLE KALP YAPMA.*/
+
+.clicked-article-like-button{
+  display: flex;
+  padding: 0.3em;
+  height: 2em;
+  border: 1px;
+  border-radius: 0.3em;
+  border-color: #5CB85C;
+  border-style: solid;
+  background-color: #5CB85C;
+}
+.clicked-article-like-button:active{
+  background-color: white;
+}
+.clicked-heart {
+  background-color: white;
+  display: inline-block;
+  height: 10px;
+  margin: 3px 10px 0  12px;
+  position: relative;
+  top: 0;
+  transform: rotate(-45deg);
+  width: 10px;
+}
+.clicked-heart:before,
+.clicked-heart:after {
+  content: "";
+  border-radius: 50%;
+  height: 10px;
+  position: absolute;
+  width: 10px;
+  background-color: white;
+}
+.clicked-like-no{
+  color: white;
+  margin-right: 5px;
+}
+.clicked-article-like-button:active >.clicked-like-no{
+  background-color: white;
+  color: #5CB85C;
+}
+.clicked-article-like-button:active >.clicked-heart{
+  background-color: #5CB85C;
+}
+.clicked-article-like-button:active >div:before{
+  background-color: #5CB85C;
+}
+.clicked-article-like-button:active >div:after{
+  background-color: #5CB85C;
+}
+/* selected-button
+
+ */
+
+
+
+
+/* alert */
+#sticky-alert-bar{
+  
+  position: sticky !important;
+  bottom: 10px !important;
+  z-index: 1;
+}
+
+.form-container{
+  width: 100%;
+  max-width: 500px;
+  margin-top: 2em;
+}
+#settings-logout{
+  margin-top: 5em;
+}
+
+
+#link-to-settings, .link-to-follow, .follow, .unfollow{
+  padding: 0em 1em 0.2em;
+  border: 1px solid rgb(183, 183, 183);
+  border-radius: 0.5em;
+  cursor: pointer;
+}
+
+img{
+  border-radius: 50%;
+  height:32px;
+  width:32px;
+}
+
+.active-feed-nav{
+  font-weight: 700;
+}
+/* i dont have much time left
+.active-feed-nav:after{
+  height: 0.5em;
+  border-bottom: 3px solid #5CB85C;
+}*/
+
+.user_page{
+  width: 70%;
+}
+
+.validataion-error{
+  margin: -1em 0 1.5em;
+  color: red;
+}
+
+.read-more{
+  font-size: 13px;
+  color: rgb(125, 125, 125);
+}
+
+.gray{
+  background-color: rgb(98, 178, 98);
+}
+.banner-bio{
+  padding: 0.5em
+}
+
+/* article settings*/
+.article-banner{
+  padding: 2rem 5rem;
+  width: 100%;
+  background-color: #333;
+  color: white;
+}
+@media only screen and (max-width: 800px) {
+  .article-banner{
+    padding: 2rem 0.5rem;
+  }
+}
+@media only screen and (max-width: 550px) {
+  .article-banner{
+    padding: 2rem 0rem;
+  }
+}
+.article-page-title {
+  color: inherit;
+  margin: 0.3em 0.5em;
+  font-weight: 400;
+}
+.article-page-user{
+  display:flex;
+  flex-direction: row;
+  margin: 1em 1.1em;
+}
+#article-page-follow, #article-page-unfollow {
+  /* somehow, it does not work */
+  font-size: 16px;
+  margin: 0 1em !important;
+  height: fit-content;
+  cursor: pointer;
+}
+.article-page-body{
+  width: 90%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin-bottom: 1em;
+  padding: 0.2em;
+  padding-bottom: 1em;
+  border-bottom: 1px solid rgb(173, 173, 173);
+}
+.article-page-body-text{
+  font-size: 18px;
+  padding: 20px 5px 15px;
+}
+.article-page-comments{
+  max-width: 550px;
+  width:90%;
+}
+.favorite{
+  height: fit-content;
+  padding: 0.1em 0.4em 0.2em 0.1em ;
+  border: 1px solid rgb(183, 183, 183);
+  border-radius: 0.5em;
+  cursor: pointer;
+}
+
+@media only screen and (max-width: 600px) {
+  .article-page-comments{
+    width: 90%;
+  }
+}
+.comment-card{
+  display: block;
+  margin-bottom: 0.75rem;
+  background-color: #fcfcfc;
+  border: 2px solid #e5e5e5;
+  border-radius: 4px;
+}
+.comment-user{
+
+  background-color: #e5e5e5;
+  margin: 0px;
+  padding: 0.5em 0.5em 0.2em 0.5em;
+  padding-top: 0.3em;
+  padding-left: 0.5em;
+  display:flex;
+  justify-content: space-between;
+}
+.comment{
+  padding: 0.7em;
+}
+#comment-form{
+  background-color: #e5e5e5;
+  margin-bottom: 1em;
+  display:flex;
+  
+  flex-direction: column;
+  align-items: flex-end;
+}
+.comment-box{
+  margin-bottom: 0;
+
+}
+.comment-submit{
+  background-color:  #5CB85C;
+  border: 0px;
+  border-radius: 0.5em;
+  padding: 0.5em;
+  margin: 0.5em;
+  color:white;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.delete-comment{
+  cursor: pointer;
+  background-color: red;
+  color: white;
+  padding: 0.3em 0.6em 0.4em;
+  border-radius: 0.6em;
+  height: fit-content;
+}
+
+.article-page-tags{
+  display: flex;
+  flex-direction: row;
+}
+
+.goo{
+  width:50px;
+  height:50px;
+}
