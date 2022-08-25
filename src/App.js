@@ -7,55 +7,77 @@ import NewArticle from "./pages/NewArticle";
 import UserSetting from "./pages/UserSetting";
 import UserPage from "./pages/UserPage";
 import { Routes, Route } from "react-router-dom";
-import { useEffect } from "react";
-//import SimpleSnackbar from "./components/SimpleSnackbar";
+import React, { useEffect, useState } from "react";
 import { ArticlePage } from "./pages/ArticlePage";
 import { logIn, selectUser } from "./features/userSlice";
 import { useSelector, useDispatch } from "react-redux";
-import { updateNavigationList } from "./features/navigationSlice";
+import {
+  updateNavigationList,
+  selectLoginUrl,
+  selectHomepageUrl,
+  selectArticleEditorUrl,
+  selectRegisterUrl,
+  selectSettingsUrl,
+  selectUserPageUrl,
+  selectArticlePageUrl,
+} from "./features/navigationSlice";
 import { NotFound } from "./pages/NotFound";
+import { ContextButton } from "./components/ContextButton";
 
 function App() {
+  // we get previous user login info from local storage.
   const cookie = localStorage.getItem("user");
   const startingState = cookie ? JSON.parse(cookie) : false;
 
-  // so we wont have to change it all occurences between files each time.
   const user = useSelector(selectUser);
   console.log("app is rendered. user:", Boolean(user));
 
   const dispatch = useDispatch();
-  //const temp_func = () => user || dispatch(logIn(startingState));
   useEffect(() => {
     user || dispatch(logIn(startingState));
     dispatch(updateNavigationList(user));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user]);
 
-  //const [toastMessage, setToastMessage] = useState("Temp"); // setToastMessage={setToastMessage}
+  // temporary dark mode. was most urgent & important todo.
+  const [isDarkMode, setDarkMode] = useState(false);
+
+  // adress selectors.
+  const loginUrl = useSelector(selectLoginUrl); //,selectHomepageUrl,selectArticleEditorUrl,selectRegisterUrl,selectRegisterUrl,,selectSettingsUrl,selectUserPageUrl
+  const homepageUrl = useSelector(selectHomepageUrl);
+  const articleEditorUrl = useSelector(selectArticleEditorUrl);
+  const registerUrl = useSelector(selectRegisterUrl);
+  const userSettingsUrl = useSelector(selectSettingsUrl);
+  const userPageUrl = useSelector(selectUserPageUrl);
+  const articlePageUrl = useSelector(selectArticlePageUrl);
 
   return (
-    <>
+    <div className={isDarkMode ? "dark second-root" : "second-root"}>
       <NavBar />
       <Routes>
-        <Route path="/" element={<Homepage />} />
-        <Route path="/user/:username" element={<UserPage />} />
-        <Route path="/article/:slug" element={<ArticlePage />} />
+        <Route path={homepageUrl} element={<Homepage />} />
+        <Route path={`${userPageUrl}/:username`} element={<UserPage />} />
+        <Route path={`${articlePageUrl}/:slug`} element={<ArticlePage />} />
         <Route path="/*" element={<NotFound />} />
         {user ? (
           <>
-            <Route path="/newArticle" element={<NewArticle />} />
-            <Route path="/userSettings" element={<UserSetting />} />
+            <Route path={articleEditorUrl} element={<NewArticle />} />
+            <Route
+              path={`${articleEditorUrl}/:slug`}
+              element={<NewArticle />}
+            />
+            <Route path={userSettingsUrl} element={<UserSetting />} />
           </>
         ) : (
           <>
-            <Route path="/login" element={<SignIn />} />
-            <Route path="/register" element={<SignUp />} />
+            <Route path={loginUrl} element={<SignIn />} />
+            <Route path={registerUrl} element={<SignUp />} />
           </>
         )}
       </Routes>
-    </>
+      <ContextButton isDarkMode={isDarkMode} setDarkMode={setDarkMode} />
+    </div>
   );
-  // <SimpleSnackbar toastMessage={toastMessage} />
 }
 
 export default App;

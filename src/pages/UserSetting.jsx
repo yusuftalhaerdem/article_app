@@ -5,8 +5,9 @@ import { logOut, logIn, selectUser } from "../features/userSlice";
 import { useNavigate } from "react-router";
 
 const UserSetting = () => {
-  const user = useSelector(selectUser);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const user = useSelector(selectUser);
 
   const [state, setState] = useState({
     image: user.image || "",
@@ -29,7 +30,6 @@ const UserSetting = () => {
     );
   };
 
-  const navigate = useNavigate();
   // logs out the user
   const deleteUserFunction = () => {
     localStorage.removeItem("user");
@@ -39,7 +39,7 @@ const UserSetting = () => {
 
   return (
     <div className="form-container">
-      <h1>Your Settings</h1>
+      <h1 className="setting-title">Your Settings</h1>
       <form className="form">
         <input
           type="text"

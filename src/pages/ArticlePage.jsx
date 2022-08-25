@@ -1,26 +1,38 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router";
+import { Link } from "react-router-dom";
 import {
   changeFollow,
+  deleteArticle,
   favouriteArticle,
   getArticle,
 } from "../actions/ApiActions";
 import { CommentSection } from "../components/CommentSection";
 import { UserInfo } from "../components/UserInfo";
-import { articleLikeAction } from "../features/articleSlice";
-import { selectLoginUrl } from "../features/navigationSlice";
+import { loadArticle, selectArticle } from "../features/articleSlice";
+import {
+  selectArticleEditorUrl,
+  selectLoginUrl,
+} from "../features/navigationSlice";
 import { selectUser } from "../features/userSlice";
 
 export const ArticlePage = () => {
   const user = useSelector(selectUser);
   const { slug } = useParams();
-  const [article, setArticle] = useState(false);
+  const dispatch = useDispatch();
+  const article = useSelector(selectArticle);
+  const setArticle = (article) => {
+    dispatch(loadArticle(article));
+  };
   const navigate = useNavigate();
   const loginUrl = useSelector(selectLoginUrl);
+  const articleEditorUrl = useSelector(selectArticleEditorUrl);
 
+  // loads the article from api
   useEffect(() => {
     getArticle(slug, article, setArticle, user.token);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   console.log(article);
@@ -37,13 +49,19 @@ export const ArticlePage = () => {
         },
         article.author.following ? "DELETE" : "POST"
       );
+      // if i do it like this, website response will be faster.
+      setArticle({
+        ...article,
+        author: { ...article.author, following: !article.author.following },
+      });
     }
   };
 
-  console.log(article);
+  //console.log(article);
   const favouriteTheArticle = () => {
     if (!user) navigate(loginUrl);
     else {
+      // i may setArticle here. since it returns article.
       favouriteArticle(slug, user.token, article.favorited ? "DELETE" : "POST");
       // This page need a little bit reorganizing
       const favCountChange = article.favorited ? -1 : +1;
@@ -53,6 +71,11 @@ export const ArticlePage = () => {
         favoritesCount: article.favoritesCount + favCountChange,
       });
     }
+  };
+  const deleteTheArticle = (e) => {
+    e.preventDefault();
+    deleteArticle(article.slug, user.token);
+    navigate(-1);
   };
 
   const article_tags = () => {
@@ -74,24 +97,33 @@ export const ArticlePage = () => {
             author={article.author || user}
             createdAt={article.createdAt || "unknown date"}
           />
-          {article && article.author.following ? (
+
+          {article && article.author.username !== user.username ? (
             <div
               id="article-page-unfollow"
               className="unfollow"
               style={{ margin: "0 1em" }}
               onClick={followUser}
             >
-              Unfollow {article && article.author.username}
+              {article && article.author.following ? "Unfollow" : "Follow"}{" "}
+              {article && article.author.username}
             </div>
           ) : (
-            <div
-              id="article-page-follow"
-              className="follow"
-              style={{ margin: "0 1em" }}
-              onClick={followUser}
-            >
-              Follow {article && article.author.username}
-            </div>
+            <>
+              <Link
+                to={`${articleEditorUrl}/${article.slug}`}
+                className="article-edit"
+              >
+                Edit Article
+              </Link>
+              <Link
+                to={"../"}
+                className="article-delete"
+                onClick={deleteTheArticle}
+              >
+                Delete Article
+              </Link>
+            </>
           )}
 
           <div className="favorite" onClick={favouriteTheArticle}>

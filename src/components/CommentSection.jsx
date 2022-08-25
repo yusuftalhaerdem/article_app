@@ -16,16 +16,12 @@ export const CommentSection = (props) => {
   const slug = props.slug;
   const [comments, setComments] = useState(false);
   useEffect(() => getComments(slug, comments, setComments, token), []);
-  //getComments(slug, comments, setComments, token);
   console.log(comments);
 
   const handleComment = (event) => {
     event.preventDefault();
     const comment_text = document.getElementById("comment-text").value;
-    console.log(comment_text);
     createComment(slug, comment_text, token, comments, setComments);
-    // setComments(comments.push(createComment));
-    // console.log(comment_text);
   };
   const delete_comment = (e) => {
     const comment_id = e.target.getAttribute("value");
@@ -36,8 +32,9 @@ export const CommentSection = (props) => {
     });
     setComments(filtered_comments);
   };
+
+  // comments are kept inside the cards, this function returns them
   const cards = () => {
-    //console.log(comments);
     return (comments || []).map((current, index, arr) => {
       return (
         <div className="comment-card" key={index}>

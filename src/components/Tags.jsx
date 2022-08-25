@@ -1,11 +1,16 @@
-import React, { useState } from "react";
-import { useSelector } from "react-redux";
+import React from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { getTags } from "../actions";
+import { loadTags, selectTagList } from "../features/tagsSlice";
 import { selectUser } from "../features/userSlice";
 
 export const Tags = (props) => {
   const user = useSelector(selectUser);
   const token = user.token;
+  const dispatch = useDispatch();
+
+  const tagList = useSelector(selectTagList);
+  const setTagList = (tagList) => dispatch(loadTags(tagList));
 
   const setActiveTag = props.setActiveTag;
   const activeTag = props.activeTag;
@@ -22,7 +27,7 @@ export const Tags = (props) => {
     }
   };
 
-  const [tagList, setTagList] = useState(false);
+  //const [tagList, setTagList] = useState(false);
   getTags(tagList, setTagList, token);
   //console.log(tagList);
   //const tags = readTags();

@@ -1,14 +1,26 @@
-import React from "react";
+import React, { useState } from "react";
 import { sendLoginRequest } from "../actions/ApiActions";
 import { useValidatableForm } from "react-validatable-form";
 import { useDispatch } from "react-redux";
 import { logIn } from "../features/userSlice";
 import { Link, useNavigate } from "react-router-dom";
+import { Inputs } from "../components/Inputs";
 
+const pageName = "sign-in";
+const inputOutline = {
+  email: {
+    name: "email",
+    type: "text",
+  },
+  password: {
+    name: "password",
+    type: "password",
+  },
+};
 const initialFormData = {};
 const rules = [
   {
-    path: "email",
+    path: inputOutline.email.name,
     ruleSet: [
       {
         rule: "required",
@@ -18,23 +30,28 @@ const rules = [
       },
     ],
   },
-  { path: "password", ruleSet: [{ rule: "required" }] },
+  { path: inputOutline.password.name, ruleSet: [{ rule: "required" }] },
 ];
 
 export const SignIn = () => {
-  //const user = useSelector(selectUser);
   const dispatch = useDispatch();
-  /*
-  const navigation = () => dispatch(changeNavigationTab("Sign in"));
-  useEffect(() => {
-    dispatch(changeNavigationTab("Sign in"));
-  }, []);
-*/
+
+  // only if user tried to continue with missing info, we will show missing error.
+  const [submitFailed, setSubmitFailed] = useState(false);
   const { isValid, formData, setPathValue, getValue, getError } =
     useValidatableForm({
       rules,
       initialFormData,
     });
+
+  const prop = {
+    setPathValue: setPathValue,
+    getValue: getValue,
+    getError: getError,
+    pageName: pageName,
+    inputOutline: Object.values(inputOutline),
+    submitFailed: submitFailed,
+  };
 
   const navigate = useNavigate();
   const setUser = (user) => {
@@ -45,15 +62,17 @@ export const SignIn = () => {
   const submitForm = (event) => {
     event.preventDefault();
     if (!isValid) {
+      setSubmitFailed(true);
+      console.log("form is not valid yet!!");
       alert("form is not filled.");
-      console.error("form is not valid yet");
       return;
     }
 
-    const email_value = document.getElementById("sign-in-email").value;
-    const password_value = document.getElementById("sign-in-password").value;
-
-    sendLoginRequest(email_value, password_value, setUser);
+    sendLoginRequest(
+      getValue(inputOutline.email.name),
+      getValue(inputOutline.password.name),
+      setUser
+    );
   };
 
   return (
@@ -64,28 +83,7 @@ export const SignIn = () => {
           Need an account?
         </Link>
         <form className="sign-in-form" onSubmit={submitForm}>
-          <input
-            value={getValue("email")}
-            onChange={(event) => setPathValue("email", event.target.value)}
-            id="sign-in-email"
-            type="text"
-            placeholder="Email"
-            className="input"
-          ></input>
-          {getError("email") && (
-            <div className="validataion-error">{getError("email")}</div>
-          )}
-          <input
-            value={getValue("password")}
-            onChange={(event) => setPathValue("password", event.target.value)}
-            id="sign-in-password"
-            type="password"
-            placeholder="Password"
-            className="input"
-          ></input>
-          {getError("password") && (
-            <div className="validataion-error">{getError("password")}</div>
-          )}
+          <Inputs object={prop} />
           <div className="submit-container">
             <input
               id="sign-in-submit"

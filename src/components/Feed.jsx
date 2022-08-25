@@ -19,7 +19,7 @@ import {
   selectTagFilteredArticles,
   selectUserFeedName,
   selectGlobalFeedName,
-} from "../features/articleSlice";
+} from "../features/articleListSlice";
 import { selectUser } from "../features/userSlice";
 import { ArticlePreviews } from "./ArticlePreviews";
 import { Tags } from "./Tags";
@@ -69,20 +69,16 @@ export const Feed = () => {
   useEffect(() => {
     const fetchArticles = () => {
       if (currentArticleTab === globalFeedName) {
-        //console.log("fine");
         getGlobalArticles(
           globalFeedArticles,
           setGlobalFeedArticles,
           user.token
         );
       } else if (currentArticleTab === userFeedName) {
-        //console.log("ops");
         getUserArticles(user.token, userFeedArticles, setUserFeedArticles);
       } else {
         // if filter is tag.
-        // adding another state for tag may be good? or just fixing it
-        //dispatch(resetTagFeed());
-        //console.log("opppsss");
+        // adding another state for tag may be better
         getFilteredArticles(
           user.token,
           currentArticleTab,

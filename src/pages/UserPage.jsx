@@ -20,11 +20,11 @@ import {
   selectMyArticleName,
   selectFavedArticleName,
   cachedArticles,
-} from "../features/articleSlice";
+} from "../features/articleListSlice";
 import {
   selectIsFollowed,
   updateProfileFollowStatus,
-} from "../features/profileSlide";
+} from "../features/profileSlice";
 import { selectLoginUrl } from "../features/navigationSlice";
 // import { changeNavigationTab } from "../features/navigationSlice";
 

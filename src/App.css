@@ -49,33 +49,50 @@ button {
   border: 0;
 }
 #root{
+  /*
   display: flex;    
   align-items: center;
   flex-direction: column;
-  margin-bottom: 1em;
+  margin-bottom: 1em;*/
 }
+.dark{
+  background-color: black;
+}
+.second-root{
+  display: flex;    
+  align-items: center;
+  flex-direction: column;
+  padding-bottom: 1em;
+
+  min-width: 100vw;
+  min-height: 100vh;
+
+}
+/*min-height: 100vh;
+  overflow-y: scroll;*/
 
 /* navbar css start */
 .navbar{
   width: 100%;
-  /*max-width: 1000px; */
-  background-color: greenyellow;
+  /*max-width: 1000px; 
+  background-color: greenyellow;*/
   border-radius: 0.5em;
   position: relative;
   padding: 0.5em 1em;
   display: flex;
   justify-content: space-between;
-}
-.navbar-light {
   background-color: white;
   color: rgb(116, 116, 116);
 }
+.dark .navbar{
+  background-color: black;
+  color: rgb(173, 173, 173);
+}
+
 .site-title {
   margin: 0.5em;
   color: rgb(29, 177, 29);
   font-weight: bold;
-}
-.left-navbar {
 }
 
 a {
@@ -84,7 +101,6 @@ a {
 }
 .navbar-items {
   display: flex;
-  /*float: right;*/
   list-style-type: none;
   margin: 0;
 
@@ -122,10 +138,14 @@ a {
   margin-bottom: 2em;
   align-items: center;
 } 
+.dark .banner{
+  background-color:#1bad1b;
+  color: black;
+}
+
 .banner-title {
   margin: 0;
   font-size: 3.5rem;
-  /* padding-bottom: 0.5em; */
 }
 .banner-text{
   margin: 0;
@@ -162,6 +182,12 @@ a {
   background-color: #f3f3f3;
   border-radius: 0.2em;
 }
+.dark .tags-pane{
+  background-color:#333;
+}
+.dark .tags-head{
+  color: #bbb;
+}
 .tags-head{
   display: flex;
   margin-left: 0.5em;
@@ -170,6 +196,10 @@ a {
   display: flex;
   flex-wrap: wrap;
   margin-left: 0.5em;
+}
+.dark .tag{
+  color: #bbb;
+  background-color: #555;
 }
 .tag{
   margin: 0.1rem;
@@ -181,10 +211,7 @@ a {
   color: white;
   white-space: nowrap;
 }
-.active-tag{
-  background-color: #687077;
-}
-.tag:hover{
+.active-tag, .tag:hover{
   background-color: #687077;
 }
 .page-left {
@@ -200,10 +227,16 @@ a {
   padding: 1.5em 0;
   border-top: 1px rgb(161, 161, 161) solid;
 }
+.dark .article-cell{
+  border-color:rgb(116, 116, 116)
+}
 .article-top{
   display: flex;
   flex-direction: row;
   justify-content: space-between;
+}
+.dark .article-title{
+  color: #888;
 }
 .article-title{
   color: rgb(66, 66, 66);
@@ -216,7 +249,9 @@ a {
   display: flex;
   text-align: left;
 }
-
+.dark .feed-nav{
+  background-color:black;
+}
 .feed-nav{
   display: flex;
   width: 100%;
@@ -239,6 +274,10 @@ a {
 .article-tags{
   display: flex;
   flex-direction: row;
+}
+.dark .article-tag{
+  color: #666;
+  border-color: #888;
 }
 .article-tag{
   padding: 0 0.5em;
@@ -279,8 +318,10 @@ a {
 
 
 /* start of sign up page */
+.dark .sign-up-page{
+  color:white;
+}
 .sign-up-page{
-  background-color: white;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -291,6 +332,12 @@ a {
 .sign-up-form{
   width: 350px;
 }
+.dark .input{
+  background-color: black;
+  color: rgb(219, 219, 219);
+  border-color: gray;
+}
+
 .sign-up-title{
   margin-bottom: 0.5rem;
   font-family: inherit;
@@ -366,9 +413,11 @@ a {
 
 /* stat of sign in page */
 
+.dark .sign-in-page{
+  color: white;
+}
 
 .sign-in-page{
-  background-color: white;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -421,6 +470,9 @@ a {
 .sign-up-password{}
 .submit-container{
   width: 100%;
+}
+.dark .submit{
+  background-color: #418d41;
 }
 .submit{
   float: right;
@@ -492,6 +544,9 @@ textarea {
 .form {
   margin-top:0.5em;
 }
+.dark .logout{
+  background-color:rgb(200, 0, 0);
+}
 .logout {
   float:left;
   margin-top:2em;
@@ -550,6 +605,9 @@ textarea {
   color:#5CB85C;
   margin-right: 5px;
 }
+.dark .article-like-button{
+  background-color: black;
+}
 .article-like-button{
   display: flex;
   padding: 0.3em;
@@ -563,15 +621,27 @@ textarea {
 .article-like-button:active{
   background-color: #5CB85C;
 }
+.dark .article-like-button:active>.like-no{
+  color: black;
+}
 .article-like-button:active >.like-no{
   background-color: #5CB85C;
   color: white ;
 }
+.dark .article-like-button:active>.heart{
+  background-color: black;
+}
 .article-like-button:active >.heart{
   background-color: white;
 }
+.dark .article-like-button:active >div:before{
+  background-color: black;
+}
 .article-like-button:active >div:before{
   background-color: white;
+}
+.dark .article-like-button:active >div:after{
+  background-color: black;
 }
 .article-like-button:active >div:after{
   background-color: white;
@@ -592,8 +662,14 @@ textarea {
   border-style: solid;
   background-color: #5CB85C;
 }
+.dark .clicked-article-like-button:active{
+  background-color: black;
+}
 .clicked-article-like-button:active{
   background-color: white;
+}
+.dark .clicked-heart {
+  background-color: black;
 }
 .clicked-heart {
   background-color: white;
@@ -605,6 +681,10 @@ textarea {
   transform: rotate(-45deg);
   width: 10px;
 }
+.dark .clicked-heart:before,
+.dark .clicked-heart:after {
+  background-color: black;
+}
 .clicked-heart:before,
 .clicked-heart:after {
   content: "";
@@ -614,9 +694,15 @@ textarea {
   width: 10px;
   background-color: white;
 }
+.dark .clicked-like-no{
+  color: black;
+}
 .clicked-like-no{
   color: white;
   margin-right: 5px;
+}
+.dark .clicked-article-like-button:active >.clicked-like-no{
+  background-color: black;
 }
 .clicked-article-like-button:active >.clicked-like-no{
   background-color: white;
@@ -743,8 +829,12 @@ img{
   padding-bottom: 1em;
   border-bottom: 1px solid rgb(173, 173, 173);
 }
+
+.dark .article-page-body-text{
+  color:rgb(238, 238, 238);
+}
 .article-page-body-text{
-  font-size: 18px;
+  font-size: 18px;  
   padding: 20px 5px 15px;
 }
 .article-page-comments{
@@ -771,6 +861,9 @@ img{
   border: 2px solid #e5e5e5;
   border-radius: 4px;
 }
+.dark .comment-user{
+  background-color: #555555;
+}
 .comment-user{
 
   background-color: #e5e5e5;
@@ -781,16 +874,25 @@ img{
   display:flex;
   justify-content: space-between;
 }
+.dark .comment{
+  background-color: black;
+  color: rgb(185, 185, 185);
+}
 .comment{
   padding: 0.7em;
 }
+
 #comment-form{
-  background-color: #e5e5e5;
+  background-color: #d5d5d5;
   margin-bottom: 1em;
   display:flex;
   
   flex-direction: column;
   align-items: flex-end;
+}
+.dark .comment-box{
+  color:white;
+  background-color: black;
 }
 .comment-box{
   margin-bottom: 0;
@@ -806,7 +908,12 @@ img{
   font-weight: 700;
   cursor: pointer;
 }
-
+/*
+.dark .comment-submit{
+  background-color:  #5CB85C;
+  color:white;
+}
+*/
 .delete-comment{
   cursor: pointer;
   background-color: red;
@@ -824,4 +931,90 @@ img{
 .goo{
   width:50px;
   height:50px;
+}
+
+
+/* width */
+::-webkit-scrollbar {
+  /*
+  width: 10px;
+  but to make it hidden, */
+  width: 0px;
+}
+/* Track */
+::-webkit-scrollbar-track {
+  background: #f1f1f1; 
+}
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #818a91; 
+  border-radius: 5px;
+}
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #687077; 
+}
+
+.page-numbers{
+  display:flex;
+  flex-direction: row;
+  justify-content: center;
+
+}
+.page-no{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  cursor:pointer;
+
+  width: 2em;
+  height: 2em;
+  padding: 0.1em 0 0.2em;
+  margin: 0.1em 0.2em;
+  background-color: #ddd;
+  border-radius: 1em;
+}
+
+.dark-mode{
+  display: block;
+  position: sticky;
+  bottom: 10px;
+  right: 30px;
+}
+.dark .dark-mode{
+  background-color: pink;
+}
+
+.dark .setting-title{
+  color:white;
+}
+.article-edit, .article-delete{
+  margin: 0.1em;
+  margin-left: 0.3em;
+  padding: 0.1em 0.4em 0.2em;
+  border: 1px solid white;
+}
+.article-delete{
+  background-color: red;
+}
+textarea{
+  overflow-y: hidden;
+}
+.span-textarea{
+  display: block;
+    width: 100%;
+    overflow: hidden;
+    resize: both;
+    min-height: 40px;
+    line-height: 20px;
+    
+    border: 1px solid #ccc;
+    font-family: inherit;
+    font-size: inherit;
+    padding: 1px 6px;
+    
+    -webkit-user-modify: read-write;
+    overflow-wrap: break-word;
+    -webkit-line-break: after-white-space;
 }

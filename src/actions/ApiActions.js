@@ -37,6 +37,33 @@ export const createArticle = (title, description, body, tags, token) => {
   my_fetch("https://api.realworld.io/api/articles", "POST", token, post_body);
 };
 
+export const updateArticle = (
+  title,
+  description,
+  body,
+  slug,
+  token,
+  afterFunction
+) => {
+  const request_body = `{
+      "article": {
+        "title": "${title}",
+        "description": "${description}",
+        "body": "${body}"
+      }
+    }`;
+  my_fetch(
+    `https://api.realworld.io/api/articles/${slug}`,
+    "PUT",
+    token,
+    request_body
+  ).then((res) => {
+    afterFunction();
+  });
+};
+export const deleteArticle = (slug, token) => {
+  my_fetch(`https://api.realworld.io/api/articles/${slug}`, "DELETE", token);
+};
 export const createComment = (slug, comment_body, token, state, setState) => {
   const body = `{
           "comment": {
@@ -109,7 +136,7 @@ export const getFilteredArticles = (
   option
 ) => {
   fetch_update_state(
-    `https://api.realworld.io/api/articles?${option}=${option_value}&limit=20&offset=0`,
+    `https://api.realworld.io/api/articles?${option}=${option_value}&limit=100&offset=0`,
     "GET",
     token,
     null,
@@ -119,7 +146,7 @@ export const getFilteredArticles = (
 };
 export const getGlobalArticles = async (article_list, setArticles, token) => {
   fetch_update_state(
-    `https://api.realworld.io/api/articles?limit=20&offset=0`,
+    `https://api.realworld.io/api/articles?limit=100&offset=0`,
     "GET",
     token || null,
     null,
@@ -130,7 +157,7 @@ export const getGlobalArticles = async (article_list, setArticles, token) => {
 
 export const getUserArticles = async (token, article_list, setArticles) => {
   fetch_update_state(
-    `https://api.realworld.io/api/articles/feed?limit=20&offset=0`,
+    `https://api.realworld.io/api/articles/feed?limit=100&offset=0`,
     "GET",
     token || null,
     null,
@@ -203,7 +230,6 @@ export const sendLoginRequest = async (email, password, setUser) => {
 
   console.log("fetch operation of login request is completed");
 
-  // DONE --------------------------------------------------------------
   return response;
 };
 
@@ -254,29 +280,6 @@ export const updateUser = (state, user, setUserState, password) => {
     setUserState(response.user);
   });
 };
-/*
-export const GetCurrentUser = () => {
-  const myHeaders = new Headers();
-  myHeaders.append(
-    "Authorization",
-    "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Inl1c3VmZXJkZW1AZ21haWwuY29tIiwidXNlcm5hbWUiOiJzemVseSIsImlhdCI6MTY1OTk1NDE4MywiZXhwIjoxNjY1MTM4MTgzfQ.vgesFMfmZ_kP-BTAqbO25APyGoZLF6ssPEC208VqBuw"
-  );
-  const requestOptions = {
-    method: "GET",
-    headers: myHeaders,
-    redirect: "follow",
-  };
-  const token ="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Inl1c3VmZXJkZW1AZ21haWwuY29tIiwidXNlcm5hbWUiOiJzemVseSIsImlhdCI6MTY1OTk1NDE4MywiZXhwIjoxNjY1MTM4MTgzfQ.vgesFMfmZ_kP-BTAqbO25APyGoZLF6ssPEC208VqBuw";
-  my_fetch("https://api.realworld.io/api/user","GET", token)
-
-  const response = fetch("https://api.realworld.io/api/user", requestOptions)
-    .then((response) => response.text())
-    .then((result) => console.log(result))
-    .catch((error) => console.log("error", error));
-
-  return response;
-};
-*/
 
 export const getTags = (tagList, setTagList, token) => {
   fetch_update_state(
@@ -288,25 +291,3 @@ export const getTags = (tagList, setTagList, token) => {
     setTagList
   );
 };
-/*
-let data = false;
-export const getTags = (tagList, setTagList) => {
-  
-  return (
-    my_fetch("https://api.realworld.io/api/tags", "GET")
-      .then((response) => response.json())
-      //.then((response) => console.log(response))
-      .then((response) => {
-        if (JSON.stringify(data) !== JSON.stringify(response)) {
-          data = response;
-          setTagList(response);
-        }
-        return response;
-      })
-      .catch((error) => console.log(error))
-  );
-};
-export const readTags = () => {
-  return data;
-};
-*/

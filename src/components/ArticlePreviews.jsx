@@ -1,11 +1,14 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { UserInfo } from "./UserInfo";
 import { favouriteArticle } from "../actions/ApiActions";
 import { useSelector, useDispatch } from "react-redux";
 //import { Alert } from "@mui/material";
 import { selectUser } from "../features/userSlice";
 import { Link, useNavigate } from "react-router-dom";
-import { articleLikeAction, selectArticles } from "../features/articleSlice";
+import {
+  articleLikeAction,
+  selectArticles,
+} from "../features/articleListSlice";
 import { selectLoginUrl } from "../features/navigationSlice";
 
 export const ArticlePreviews = (props) => {
@@ -40,8 +43,55 @@ export const ArticlePreviews = (props) => {
   };
 
   // we gather the articles here
-  console.log("article list:", article_list);
-  const articles = (article_list || []).map((current) => {
+  //console.log("article list:", article_list);
+  const [pageNo, setPageNo] = useState(0);
+  useEffect(() => setPageNo(0), [article_list]);
+  //const page_no = 1;
+  const max_article_per_page = 10;
+  const page_count = article_list
+    ? Math.ceil(article_list.length / max_article_per_page)
+    : 0;
+
+  const page_articles = (page_no) => {
+    if (!article_list) return [];
+    //console.log(page_no, page_count);
+    const startingPageNo = page_no * max_article_per_page;
+    if (page_no < page_count) {
+      return article_list.slice(
+        startingPageNo,
+        startingPageNo + max_article_per_page
+      );
+    } else if (page_no === page_count) {
+      return article_list.slice(startingPageNo, article_list.length);
+    } else {
+      console.log("something may be wrong!!!!!!!!!!!!!!!!!!!!!!!!!!");
+      return [];
+    }
+  };
+  const changePageNo = (page_no) => (e) => {
+    setPageNo(page_no);
+  };
+
+  const article_page_links = () => {
+    // page_count
+    // if it is only page, we dont add any paging button
+    if (page_count <= 1) {
+      return <></>;
+    }
+    const no_list = [...Array(page_count).keys()];
+    const page_numbers = no_list.map((current) => {
+      return (
+        <div key={current} className="page-no" onClick={changePageNo(current)}>
+          {current + 1}
+        </div>
+      );
+    });
+    return <div className="page-numbers">{page_numbers}</div>;
+  };
+
+  const paged_articles = page_articles(pageNo);
+
+  const articles = (paged_articles || []).map((current) => {
     // check my key :D. IT IS NOT INDEX
     return (
       <span key={current.slug}>
@@ -100,20 +150,7 @@ export const ArticlePreviews = (props) => {
       ) : (
         <h4 id="article-loading">Articles are loading</h4>
       )}
+      {article_page_links()}
     </>
   );
-
-  /*
-        <Alert variant="filled" severity="error" className="sticky-alert">
-        </Alert>
-  const showStickAlert = () => {
-    React.createElement();
-    const alert = React.createElement(Alert, [
-      { variant: "filled" },
-      { severity: "error" },
-    ]);
-    document.getElementById("sticky-alert-bar").appendChild(alert);
-  };
-  showStickAlert();
-  */
 };

@@ -16,6 +16,7 @@ export const NavBar = () => {
 
   const currentUrl = useLocation().pathname;
   useEffect(() => {
+    console.log(currentUrl);
     //scrools up to start of page in each url change.
     window.scrollTo(0, 0);
     // it fails when i go to previous page or next page, it may be due to react router or google chrome prefences.

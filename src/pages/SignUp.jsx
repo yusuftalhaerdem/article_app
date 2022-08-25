@@ -1,13 +1,29 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { ReactValidatableFormProvider } from "react-validatable-form";
 import { useValidatableForm } from "react-validatable-form";
 import { sendRegisterRequest } from "../actions/ApiActions";
+import { Inputs } from "../components/Inputs";
 
+const pageName = "sign-up";
+const inputOutline = {
+  email: {
+    name: "email",
+    type: "text",
+  },
+  username: {
+    name: "username",
+    type: "text",
+  },
+  password: {
+    name: "password",
+    type: "password",
+  },
+};
 const initialFormData = {};
 const rules = [
   {
-    path: "email",
+    path: inputOutline.email.name,
     ruleSet: [
       {
         rule: "required",
@@ -18,7 +34,7 @@ const rules = [
     ],
   },
   {
-    path: "password",
+    path: inputOutline.password.name,
     ruleSet: [
       { rule: "required" },
       {
@@ -32,7 +48,7 @@ const rules = [
     ],
   },
   {
-    path: "username",
+    path: inputOutline.username.name,
     ruleSet: [
       { rule: "required" },
       {
@@ -47,66 +63,49 @@ const rules = [
   },
 ];
 export const SignUp = () => {
+  // only if user tried to continue with missing info, we will show missing error.
+  const [submitFailed, setSubmitFailed] = useState(false);
   const { isValid, formData, setPathValue, getValue, getError } =
     useValidatableForm({
       rules,
       initialFormData,
     });
+  const prop = {
+    setPathValue: setPathValue,
+    getValue: getValue,
+    getError: getError,
+    pageName: pageName,
+    inputOutline: Object.values(inputOutline),
+    submitFailed: submitFailed,
+  };
 
-  const getUserInfo = (event) => {
+  const submitForm = (event) => {
     event.preventDefault();
     if (!isValid) {
+      setSubmitFailed(true);
       alert("form is not filled.");
       console.error("form is not valid yet");
       return;
     }
-    const username_value = document.getElementById("sign-up-username").value;
-    const email_value = document.getElementById("sign-up-email").value;
-    const password_value = document.getElementById("sign-up-password").value;
-    sendRegisterRequest(username_value, email_value, password_value).then(() =>
-      alert("account is successfully created")
-    );
+
+    sendRegisterRequest(
+      getValue(inputOutline.username.name),
+      getValue(inputOutline.email.name),
+      getValue(inputOutline.password.name)
+    ).then(() => alert("account is successfully created"));
   };
+
   return (
     <div className="sign-up-page">
       <h1 className="sign-up-title">Sign up</h1>
       <Link to="../login" className="sign-up-link">
         Have an account?
       </Link>
-      <form className="sign-up-form" onSubmit={getUserInfo}>
-        <input
-          value={getValue("username")}
-          onChange={(event) => setPathValue("username", event.target.value)}
-          id="sign-up-username"
-          className="sign-up-username sign-up-input"
-          type="text"
-          placeholder="Username"
-        ></input>
-        {getError("username") && (
-          <div className="validataion-error">{getError("username")}</div>
-        )}
-        <input
-          value={getValue("email")}
-          onChange={(event) => setPathValue("email", event.target.value)}
-          id="sign-up-email"
-          className="sign-up-email sign-up-input"
-          type="text"
-          placeholder="Email"
-        ></input>
-        {getError("email") && (
-          <div className="validataion-error">{getError("email")}</div>
-        )}
-        <input
-          value={getValue("password")}
-          onChange={(event) => setPathValue("password", event.target.value)}
-          id="sign-up-password"
-          className="sign-up-password sign-up-input"
-          type="password"
-          placeholder="Password"
-        ></input>
-        {getError("password") && (
-          <div className="validataion-error">{getError("password")}</div>
-        )}
+      <form className="sign-up-form" onSubmit={submitForm}>
+        {
+          //Inputs() // bunu böyle çağırmakla <> içinde çağırmak arasında ne fark var?
+        }
+        <Inputs object={prop} />
         <div className="submit-container">
           <input
             className="sign-up-submit"
