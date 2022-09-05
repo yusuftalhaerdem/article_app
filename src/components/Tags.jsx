@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getTags } from "../actions";
 import { loadTags, selectTagList } from "../features/tagsSlice";
@@ -28,7 +28,9 @@ export const Tags = (props) => {
   };
 
   //const [tagList, setTagList] = useState(false);
-  getTags(tagList, setTagList, token);
+  useEffect(() => {
+    getTags(tagList, setTagList, token);
+  }, [user]);
   //console.log(tagList);
   //const tags = readTags();
   const tag_list = (tagList) => {

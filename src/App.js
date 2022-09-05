@@ -23,8 +23,12 @@ import {
 } from "./features/navigationSlice";
 import { NotFound } from "./pages/NotFound";
 import { ContextButton } from "./components/ContextButton";
+import AlertBar from "./components/AlertBar";
+import { Reports } from "./pages/Reports";
 
 function App() {
+  const dispatch = useDispatch();
+
   // we get previous user login info from local storage.
   const cookie = localStorage.getItem("user");
   const startingState = cookie ? JSON.parse(cookie) : false;
@@ -32,14 +36,15 @@ function App() {
   const user = useSelector(selectUser);
   console.log("app is rendered. user:", Boolean(user));
 
-  const dispatch = useDispatch();
-  useEffect(() => {
+  if (JSON.stringify(user) !== startingState)
     user || dispatch(logIn(startingState));
+
+  useEffect(() => {
     dispatch(updateNavigationList(user));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user]);
 
-  // temporary dark mode. was most urgent & important todo.
+  // for dark mode button
   const [isDarkMode, setDarkMode] = useState(false);
 
   // adress selectors.
@@ -55,6 +60,7 @@ function App() {
     <div className={isDarkMode ? "dark second-root" : "second-root"}>
       <NavBar />
       <Routes>
+        <Route path={"/reports"} element={<Reports />} />
         <Route path={homepageUrl} element={<Homepage />} />
         <Route path={`${userPageUrl}/:username`} element={<UserPage />} />
         <Route path={`${articlePageUrl}/:slug`} element={<ArticlePage />} />
@@ -76,6 +82,7 @@ function App() {
         )}
       </Routes>
       <ContextButton isDarkMode={isDarkMode} setDarkMode={setDarkMode} />
+      <AlertBar />
     </div>
   );
 }

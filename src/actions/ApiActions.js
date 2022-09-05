@@ -1,11 +1,15 @@
 import { my_fetch, fetch_update_state, basic_fetch } from "./my_fetch";
 
+// this document likely to be little messy, since i didnt understand the documentation quite well
+
 export const favouriteArticle = (slug, token, method = "POST") => {
   console.log(slug);
   my_fetch(
     `https://api.realworld.io/api/articles/${slug}/favorite`,
     method,
-    token
+    token,
+    "you favorited the article",
+    "error occured while favoriting article"
   );
 };
 
@@ -25,7 +29,14 @@ export const unlikeArticle = (slug, token) => {
     token
   );
 };
-export const createArticle = (title, description, body, tags, token) => {
+export const createArticle = (
+  title,
+  description,
+  body,
+  tags,
+  token,
+  afterFunction
+) => {
   const post_body = `{
       "article": {
         "title": "${title}",
@@ -34,7 +45,14 @@ export const createArticle = (title, description, body, tags, token) => {
         "tagList": ${JSON.stringify(tags)}
       }
     }`;
-  my_fetch("https://api.realworld.io/api/articles", "POST", token, post_body);
+  my_fetch(
+    "https://api.realworld.io/api/articles",
+    "POST",
+    token,
+    post_body
+  ).then((res) => {
+    afterFunction(res.article.slug, "created");
+  });
 };
 
 export const updateArticle = (
@@ -58,11 +76,20 @@ export const updateArticle = (
     token,
     request_body
   ).then((res) => {
-    afterFunction();
+    console.log(res);
+    afterFunction(res.article.slug, "updated");
   });
 };
-export const deleteArticle = (slug, token) => {
-  my_fetch(`https://api.realworld.io/api/articles/${slug}`, "DELETE", token);
+export const deleteArticle = (slug, token, alert) => {
+  my_fetch(`https://api.realworld.io/api/articles/${slug}`, "DELETE", token)
+    .then((res) => {
+      console.log(res);
+      alert("article succsefully deleted");
+      return res;
+    })
+    .catch((err) => {
+      alert(err);
+    });
 };
 export const createComment = (slug, comment_body, token, state, setState) => {
   const body = `{
@@ -78,7 +105,11 @@ export const createComment = (slug, comment_body, token, state, setState) => {
   )
     .then((res) => res.json())
     .then((res) => {
+      //console.log(res);
       setState([...state, Object.values(res)[0]]);
+    })
+    .catch((err) => {
+      console.log(err);
     });
 };
 
@@ -87,7 +118,9 @@ export const deleteComment = (slug, id, token) => {
     `https://api.realworld.io/api/articles/${slug}/comments/${id}`,
     "DELETE",
     token
-  ).then((res) => console.log(res));
+  ).then((res) => {
+    //console.log(res)
+  });
 };
 export const changeFollow = (
   username,
@@ -185,30 +218,95 @@ export const getUserProfile = (username, token = null) => {
   );
 };
 
-export const sendRegisterRequest = async (username, email, password) => {
-  const body = `{\n  "user": {\n    "username": "${username}",\n    "email": "${email}",\n    "password": "${password}"\n  }\n}`;
-  my_fetch("https://api.realworld.io/api/users", "POST", null, body);
-  /*
-  await fetch("https://api.realworld.io/api/users", {
-    body: `{\n  "user": {\n    "username": "${username}",\n    "email": "${email}",\n    "password": "${password}"\n  }\n}`,
-    headers: {
-      Accept: "application/json",
-      "Content-Type": "application/json",
-    },
-    method: "POST",
-  })
+export const getTags = (tagList, setTagList, token) => {
+  fetch_update_state(
+    "https://api.realworld.io/api/tags",
+    "GET",
+    token,
+    null,
+    tagList,
+    setTagList
+  );
+};
+
+export const tagsReport = (token, setState, state) => {
+  //const state = {};
+  return basic_fetch("https://api.realworld.io/api/tags", "GET", token, null)
+    .then((res) => res.json())
     .then((res) => {
-      console.log(res);
-      return res.json();
+      //console.log(res);
+      Promise.all(
+        res["tags"].map((current) => {
+          //console.log(current, res);
+          return basic_fetch(
+            `https://api.realworld.io/api/articles?tag=${current}&limit=100&offset=0`,
+            "GET",
+            token,
+            null
+          )
+            .then((res) => res.json())
+            .then((res) => {
+              // console.log(res);
+              return {
+                tag: current,
+                length: res.articlesCount,
+              };
+            });
+        })
+      ).then((values) => {
+        //console.log(values);
+        if (JSON.stringify(values) !== JSON.stringify(state)) setState(values);
+        return values;
+      });
+    });
+};
+
+const errorcheck = (res, alert = null, successMessage = null) => {
+  if (res.status === "error") {
+    if (alert) alert(res.message);
+    else console.log(res.message);
+    return false;
+  } else if (res.errors) {
+    console.log(res);
+    let messages = [];
+    for (const key in res.errors) {
+      messages.push(`${key} ${res.errors[key]}`);
+    }
+    alert(messages.join(", ") + ".");
+    return false;
+  } else {
+    alert && successMessage && alert(successMessage);
+    return true;
+  }
+};
+
+export const sendRegisterRequest = async (
+  username,
+  email,
+  password,
+  alert,
+  afterFunction
+) => {
+  const errorMessage = "Error occured during account creation";
+  const successMessage = "Account is succesfully created";
+  const body = `{\n  "user": {\n    "username": "${username}",\n    "email": "${email}",\n    "password": "${password}"\n  }\n}`;
+  basic_fetch("https://api.realworld.io/api/users", "POST", null, body, alert)
+    .then((res) => res.json())
+    .then((res) => {
+      // if there is no error, we show
+      errorcheck(res, alert, successMessage) && afterFunction();
+      return res;
     })
-    .catch((error) => console.log(error));
-*/
+    .catch((err) => {
+      alert && errorMessage && alert(errorMessage);
+      console.log(err);
+    });
   console.log("fetch operation of register request is completed");
 };
 
-///////////////////////////////// dude??????????????????
+/////////////////////////////////////////////////////////////////////////////////////
 
-export const sendLoginRequest = async (email, password, setUser) => {
+export const sendLoginRequest = (email, password, setUser, alert) => {
   const body = `{\n  "user": {\n    "email": "${email}",\n    "password": "${password}"\n  }\n}`;
   const response = basic_fetch(
     "https://api.realworld.io/api/users/login",
@@ -221,6 +319,8 @@ export const sendLoginRequest = async (email, password, setUser) => {
       if (JSON.stringify(response.user) !== undefined) {
         localStorage.setItem("user", JSON.stringify(response.user));
         setUser(response.user);
+        console.log(response.user);
+        alert("You have succesfully logged in");
       } else {
         alert("Login request is failed. Please make sure you filled correctly");
       }
@@ -228,14 +328,23 @@ export const sendLoginRequest = async (email, password, setUser) => {
     })
     .catch((error) => alert(error));
 
-  console.log("fetch operation of login request is completed");
+  console.log("fetch operation of login request is on progress.");
 
   return response;
 };
 
-export const updateUser = (state, user, setUserState, password) => {
+export const updateUser = (
+  state,
+  user,
+  setUserState,
+  password,
+  alert = () => {},
+  afterFunction = () => {}
+) => {
   console.log(state);
   console.log(user);
+
+  // bunu çok daha kolay halledebilirsin muhtemelen
   const body = {
     user: {},
   };
@@ -252,42 +361,40 @@ export const updateUser = (state, user, setUserState, password) => {
   if (state.image !== user.image && state.image !== "") {
     body.user.image = state.image;
   }
-
   if (password !== user.password && password !== "") {
     body.user.password = password;
   }
 
+  /*
   console.log(body);
   console.log(user.token);
-  console.log(JSON.stringify(body));
-  const response = my_fetch(
+  console.log(JSON.stringify(body));*/
+  const successMessage = "user informations are updated sucessfully.";
+  my_fetch(
     "https://api.realworld.io/api/user",
     "PUT",
     user.token,
     JSON.stringify(body)
   )
-    .then((res) => res.json())
+    .catch((error) => {
+      console.log(error);
+      return error;
+    })
+    .then((response) => {
+      console.log(response);
+      //if there is no error.
+      if (response.user) {
+        if (errorcheck(response, alert, successMessage)) {
+          afterFunction();
+          // we put it into state and local history.
+          localStorage.setItem("user", JSON.stringify(response.user));
+          setUserState(response.user);
+        }
+      } else {
+        alert(response);
+      }
+      return response;
+    })
     //.then((res) => console.log(res))
     .catch((err) => console.log(err));
-
-  // console.log(response);
-  response.then((response) => {
-    console.log(response);
-    console.log(response.user);
-    console.log(user);
-
-    localStorage.setItem("user", JSON.stringify(response.user));
-    setUserState(response.user);
-  });
-};
-
-export const getTags = (tagList, setTagList, token) => {
-  fetch_update_state(
-    "https://api.realworld.io/api/tags",
-    "GET",
-    token,
-    null,
-    tagList,
-    setTagList
-  );
 };

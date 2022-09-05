@@ -5,6 +5,8 @@ import articleReducer from "../features/articleSlice";
 import navigationReducer from "../features/navigationSlice";
 import profileSlide from "../features/profileSlice";
 import tagsSlice from "../features/tagsSlice";
+import alertSlice from "../features/alertSlice";
+import languageSlice from "../features/languageSlice";
 
 export const store = configureStore({
   reducer: {
@@ -14,5 +16,7 @@ export const store = configureStore({
     navigation: navigationReducer,
     profile: profileSlide,
     tags: tagsSlice,
+    alert: alertSlice,
+    language: languageSlice,
   },
 });

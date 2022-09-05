@@ -1,9 +1,12 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { Link, useNavigate } from "react-router-dom";
 import { ReactValidatableFormProvider } from "react-validatable-form";
 import { useValidatableForm } from "react-validatable-form";
 import { sendRegisterRequest } from "../actions/ApiActions";
 import { Inputs } from "../components/Inputs";
+import { addMessage } from "../features/alertSlice";
+import { selectLoginUrl } from "../features/navigationSlice";
 
 const pageName = "sign-up";
 const inputOutline = {
@@ -20,6 +23,7 @@ const inputOutline = {
     type: "password",
   },
 };
+
 const initialFormData = {};
 const rules = [
   {
@@ -63,6 +67,10 @@ const rules = [
   },
 ];
 export const SignUp = () => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const loginUrl = useSelector(selectLoginUrl);
+
   // only if user tried to continue with missing info, we will show missing error.
   const [submitFailed, setSubmitFailed] = useState(false);
   const { isValid, formData, setPathValue, getValue, getError } =
@@ -79,11 +87,19 @@ export const SignUp = () => {
     submitFailed: submitFailed,
   };
 
+  const alertFunction = (message) => {
+    dispatch(addMessage(message));
+  };
+  // after sucessfull login, we redirect user to login page.
+  const afterFunction = () => {
+    navigate(loginUrl);
+  };
+
   const submitForm = (event) => {
     event.preventDefault();
     if (!isValid) {
       setSubmitFailed(true);
-      alert("form is not filled.");
+      alertFunction("Please fill the form properly");
       console.error("form is not valid yet");
       return;
     }
@@ -91,8 +107,10 @@ export const SignUp = () => {
     sendRegisterRequest(
       getValue(inputOutline.username.name),
       getValue(inputOutline.email.name),
-      getValue(inputOutline.password.name)
-    ).then(() => alert("account is successfully created"));
+      getValue(inputOutline.password.name),
+      alertFunction,
+      afterFunction
+    );
   };
 
   return (

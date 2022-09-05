@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 
 export const ContextButton = (props) => {
   const isDarkMode = props.isDarkMode;
@@ -6,9 +6,13 @@ export const ContextButton = (props) => {
   const changeDarkMode = () => {
     setDarkMode(!isDarkMode);
   };
+
+  // starry night update will be soon :)
+  const stars = () => {};
   return (
     <div className="dark-mode" onClick={changeDarkMode}>
-      Dark
+      <div className="moon"></div>
+      <div className="stars">{stars()}</div>
     </div>
   );
 };

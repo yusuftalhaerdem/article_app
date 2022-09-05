@@ -54,7 +54,10 @@ const UserPage = () => {
     dispatch(updateArticles(articles));
   };*/
   // gets profile info and followed status.
-  GetUserInfo(username, user.token, userStatus, setUserStatus);
+  useEffect(() => {
+    GetUserInfo(username, user.token, userStatus, setUserStatus);
+  }, [user]);
+  //GetUserInfo(username, user.token, userStatus, setUserStatus);
 
   const currentArticleTab = useSelector(selectCurrentArticleTab);
   const setCurrentTab = (e) => {

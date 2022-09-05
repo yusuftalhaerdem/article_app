@@ -3,11 +3,40 @@ import { updateUser } from "../actions/ApiActions";
 import { useSelector, useDispatch } from "react-redux";
 import { logOut, logIn, selectUser } from "../features/userSlice";
 import { useNavigate } from "react-router";
+import { Inputs } from "../components/Inputs";
+import { addMessage } from "../features/alertSlice";
+import { selectHomepageUrl } from "../features/navigationSlice";
 
+const pageName = "settings";
+const inputOutline = {
+  image: {
+    name: "image",
+    type: "text",
+    placeholder: "URL of profile picture",
+  },
+  username: {
+    name: "username",
+    type: "text",
+  },
+  bio: {
+    name: "bio",
+    type: "textarea",
+    placeholder: "Short bio about you",
+  },
+  email: {
+    name: "email",
+    type: "textarea",
+  },
+  password: {
+    name: "password",
+    type: "password",
+  },
+};
 const UserSetting = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const user = useSelector(selectUser);
+  const homepageUrl = useSelector(selectHomepageUrl);
 
   const [state, setState] = useState({
     image: user.image || "",
@@ -15,6 +44,13 @@ const UserSetting = () => {
     email: user.email || "",
     bio: user.bio || "",
   });
+
+  const alertFunction = (message) => {
+    dispatch(addMessage(message));
+  };
+  const afterFunction = () => {
+    //navigate(homepageUrl);
+  };
 
   const updateUserFunction = (event) => {
     event.preventDefault();
@@ -26,67 +62,43 @@ const UserSetting = () => {
       (data) => {
         dispatch(logIn(data));
       },
-      document.getElementById("settings-password").value
+      document.getElementById("settings-password").value,
+      alertFunction,
+      afterFunction
     );
   };
 
   // logs out the user
-  const deleteUserFunction = () => {
+  const logOutUser = () => {
     localStorage.removeItem("user");
     dispatch(logOut());
     navigate("../");
+    alertFunction("you have logged out.");
+    // i may destroy the token here to provide safety.
   };
+
+  const setStateFunc = (name, payload) => {
+    setState({ [name]: payload });
+  };
+  const getValue = (name) => {
+    return state[name];
+  };
+
+  const prop = {
+    setPathValue: setStateFunc,
+    getValue: getValue,
+    getError: () => false,
+    pageName: pageName,
+    inputOutline: Object.values(inputOutline),
+    submitFailed: false,
+  }; /**/
 
   return (
     <div className="form-container">
       <h1 className="setting-title">Your Settings</h1>
       <form className="form">
-        <input
-          type="text"
-          placeholder="URL of profile picture"
-          className="input"
-          id="settings-picture-url"
-          value={state.image}
-          onChange={(event) => {
-            setState({ image: event.target.value });
-          }}
-        />
-        <input
-          type="text"
-          placeholder="Username"
-          className="input"
-          id="settings-username"
-          value={state.username}
-          onChange={(event) => {
-            setState({ username: event.target.value });
-          }}
-        />
-        <textarea
-          type="text"
-          placeholder="Short bio about you"
-          className="input"
-          id="settings-bio"
-          value={state.bio}
-          onChange={(event) => {
-            setState({ bio: event.target.value });
-          }}
-        />
-        <input
-          type="text"
-          placeholder="Email"
-          className="input"
-          id="settings-email"
-          value={state.email}
-          onChange={(event) => {
-            setState({ email: event.target.value });
-          }}
-        />
-        <input
-          type="text"
-          placeholder="New password"
-          className="input"
-          id="settings-password"
-        />
+        <Inputs object={prop} />
+
         <input
           type="submit"
           value="Update Settings"
@@ -99,7 +111,7 @@ const UserSetting = () => {
       <button
         className="logout submit"
         id="settings-logout"
-        onClick={deleteUserFunction}
+        onClick={logOutUser}
       >
         Or click here to logout.
       </button>

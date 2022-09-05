@@ -10,7 +10,12 @@ import {
 } from "../actions/ApiActions";
 import { CommentSection } from "../components/CommentSection";
 import { UserInfo } from "../components/UserInfo";
-import { loadArticle, selectArticle } from "../features/articleSlice";
+import { addMessage } from "../features/alertSlice";
+import {
+  loadArticle,
+  removeArticle,
+  selectArticle,
+} from "../features/articleSlice";
 import {
   selectArticleEditorUrl,
   selectLoginUrl,
@@ -29,17 +34,24 @@ export const ArticlePage = () => {
   const loginUrl = useSelector(selectLoginUrl);
   const articleEditorUrl = useSelector(selectArticleEditorUrl);
 
+  const alertFunction = (message) => {
+    dispatch(addMessage(message));
+  };
+
   // loads the article from api
   useEffect(() => {
     getArticle(slug, article, setArticle, user.token);
     // eslint-disable-next-line react-hooks/exhaustive-deps
+    return () => {
+      //dispatch(removeArticle());
+    };
   }, []);
 
-  console.log(article);
+  //console.log(article);
   const followUser = () => {
-    if (!user) navigate(loginUrl);
+    if (!user) return navigate(loginUrl);
     else {
-      console.log(article);
+      //console.log(article);
       changeFollow(
         article.author.username,
         user.token,
@@ -59,7 +71,7 @@ export const ArticlePage = () => {
 
   //console.log(article);
   const favouriteTheArticle = () => {
-    if (!user) navigate(loginUrl);
+    if (!user) return navigate(loginUrl);
     else {
       // i may setArticle here. since it returns article.
       favouriteArticle(slug, user.token, article.favorited ? "DELETE" : "POST");
@@ -74,7 +86,7 @@ export const ArticlePage = () => {
   };
   const deleteTheArticle = (e) => {
     e.preventDefault();
-    deleteArticle(article.slug, user.token);
+    deleteArticle(article.slug, user.token, alertFunction);
     navigate(-1);
   };
 
@@ -102,7 +114,6 @@ export const ArticlePage = () => {
             <div
               id="article-page-unfollow"
               className="unfollow"
-              style={{ margin: "0 1em" }}
               onClick={followUser}
             >
               {article && article.author.following ? "Unfollow" : "Follow"}{" "}
@@ -141,17 +152,3 @@ export const ArticlePage = () => {
     </>
   );
 };
-/*----------------------------------------------------------------
-
-          {article && article.favorited ? (
-            <div className="favorite">
-              Favorite article(
-              <div classname="fav-count">{article.favoritesCount}</div>)
-            </div>
-          ) : (
-            <div className="favorite" onClick={favouriteArticle}>
-              Unfavorite article(
-              <div classname="fav-count">{article.favoritesCount}</div>)
-            </div>
-          )}
-          */

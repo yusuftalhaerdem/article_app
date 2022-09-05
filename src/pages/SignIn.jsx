@@ -5,6 +5,7 @@ import { useDispatch } from "react-redux";
 import { logIn } from "../features/userSlice";
 import { Link, useNavigate } from "react-router-dom";
 import { Inputs } from "../components/Inputs";
+import { addMessage } from "../features/alertSlice";
 
 const pageName = "sign-in";
 const inputOutline = {
@@ -58,20 +59,24 @@ export const SignIn = () => {
     dispatch(logIn(user));
     navigate("../");
   };
+  const alertFunction = (message) => {
+    dispatch(addMessage(message));
+  };
 
   const submitForm = (event) => {
     event.preventDefault();
     if (!isValid) {
       setSubmitFailed(true);
       console.log("form is not valid yet!!");
-      alert("form is not filled.");
+      alertFunction("Please fill the form correctly before submitting.");
       return;
     }
 
     sendLoginRequest(
       getValue(inputOutline.email.name),
       getValue(inputOutline.password.name),
-      setUser
+      setUser,
+      alertFunction
     );
   };
 

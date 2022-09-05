@@ -9,6 +9,7 @@ import { changeNavigationTab } from "../features/navigationSlice";
 import { Link, useLocation } from "react-router-dom";
 
 export const NavBar = () => {
+  // i may have hamburger menu for smaller screens.
   const dispatch = useDispatch();
   const currentNavigationUrl = useSelector(selectCurrentNavigationUrl);
   const navList = useSelector(selectNavigationList);
@@ -16,7 +17,7 @@ export const NavBar = () => {
 
   const currentUrl = useLocation().pathname;
   useEffect(() => {
-    console.log(currentUrl);
+    //console.log(currentUrl);
     //scrools up to start of page in each url change.
     window.scrollTo(0, 0);
     // it fails when i go to previous page or next page, it may be due to react router or google chrome prefences.

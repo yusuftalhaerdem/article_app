@@ -7,13 +7,17 @@ import { BrowserRouter } from "react-router-dom";
 import { ReactValidatableFormProvider } from "react-validatable-form";
 import { store } from "./app/store";
 import { Provider } from "react-redux";
+import { SnackbarProvider, useSnackbar } from "notistack";
 
 const root = ReactDom.createRoot(document.getElementById("root"));
+
 root.render(
   <ReactValidatableFormProvider>
     <Provider store={store}>
       <BrowserRouter>
-        <App />
+        <SnackbarProvider maxSnack={5}>
+          <App />
+        </SnackbarProvider>
       </BrowserRouter>
     </Provider>
   </ReactValidatableFormProvider>

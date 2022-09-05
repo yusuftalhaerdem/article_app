@@ -1,25 +1,31 @@
 import React, { useState } from "react";
 import { useEffect } from "react";
 import { useSelector } from "react-redux";
+import { useNavigate } from "react-router";
 import {
   getComments,
   deleteComment,
   createComment,
 } from "../actions/ApiActions";
+import { selectLoginUrl } from "../features/navigationSlice";
 import { selectUser } from "../features/userSlice";
 import { UserInfo } from "./UserInfo";
 
 export const CommentSection = (props) => {
+  const navigate = useNavigate();
+  const loginUrl = useSelector(selectLoginUrl);
   const user = useSelector(selectUser);
   const token = user.token;
 
   const slug = props.slug;
   const [comments, setComments] = useState(false);
-  useEffect(() => getComments(slug, comments, setComments, token), []);
-  console.log(comments);
+  useEffect(() => getComments(slug, comments, setComments, token), [user]);
+  //console.log(comments);
 
-  const handleComment = (event) => {
+  // also, i may add info message to here. but im happy with it.
+  const create_comment = (event) => {
     event.preventDefault();
+    if (!user) navigate(loginUrl);
     const comment_text = document.getElementById("comment-text").value;
     createComment(slug, comment_text, token, comments, setComments);
   };
@@ -27,7 +33,7 @@ export const CommentSection = (props) => {
     const comment_id = e.target.getAttribute("value");
     deleteComment(slug, comment_id, token);
     // then, we update the state, removing the deleted item.
-    const filtered_comments = comments.filter((current, index) => {
+    const filtered_comments = comments.filter((current) => {
       if (current.id !== parseInt(comment_id)) return current;
     });
     setComments(filtered_comments);
@@ -66,7 +72,7 @@ export const CommentSection = (props) => {
   return (
     <>
       <div className="article-page-comments">
-        <form id="comment-form" onSubmit={handleComment}>
+        <form id="comment-form" onSubmit={create_comment}>
           <textarea
             id="comment-text"
             className="input comment-box"

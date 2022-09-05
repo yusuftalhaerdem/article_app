@@ -60,7 +60,7 @@ export const articleListSlice = createSlice({
       state = { article_list: false };
     },
     changeArticleTab: (state, action) => {
-      console.log(action);
+      //console.log(action);
       state.currentTab = action.payload;
     },
     articleLikeAction: (state, action) => {

@@ -7,7 +7,7 @@ export const Inputs = (props) => {
   const pageName = props.object.pageName;
   const inputOutline = props.object.inputOutline;
   const submitFailed = props.object.submitFailed;
-  console.log(inputOutline);
+  //console.log(inputOutline);
   /**
   const prop = {
     setPathValue: setPathValue,
@@ -19,15 +19,19 @@ export const Inputs = (props) => {
   };
    */
 
-  function capitalizeFirstLetter(string) {
+  const capitalizeFirstLetter = (string) => {
     return string.charAt(0).toUpperCase() + string.slice(1);
-  }
+  };
+  const textAreaOnChange = (name) => (event) => {
+    event.target.style.minHeight = `${event.target.scrollHeight}px`;
+    setPathValue(name, event.target.value);
+  };
 
   const inputs = inputOutline.map((current, index, arr) => {
     const name = current.name;
     const id = `${pageName}-${name}`;
     //console.log(getError(current.name));
-    if (current.type !== "textarea")
+    if (current.type !== "textarea") {
       return (
         <div key={id}>
           <input
@@ -43,15 +47,20 @@ export const Inputs = (props) => {
           )}
         </div>
       );
-    else {
+    } else {
       return (
-        <textarea
-          id={id}
-          className={`${id} input`}
-          placeholder={current.placeholder || capitalizeFirstLetter(name)}
-          value={getValue(name)}
-          onChange={(event) => setPathValue(name, event.target.value)}
-        />
+        <div key={id}>
+          <textarea
+            id={id}
+            className={`${id} input`}
+            placeholder={current.placeholder || capitalizeFirstLetter(name)}
+            value={getValue(name)}
+            onChange={textAreaOnChange(name)}
+          />
+          {getError(name) && submitFailed && (
+            <div className="validataion-error">{getError(name)}</div>
+          )}
+        </div>
       );
     }
   });

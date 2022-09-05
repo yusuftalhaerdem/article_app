@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router";
 import {
   createArticle,
@@ -14,6 +14,7 @@ import {
   selectCurrentNavigationUrl,
 } from "../features/navigationSlice";
 import { Inputs } from "../components/Inputs";
+import { addMessage } from "../features/alertSlice";
 
 const pageName = "new-article";
 const inputOutline = {
@@ -26,6 +27,16 @@ const inputOutline = {
     name: "description",
     type: "text",
     placeholder: "What is this article about?",
+  },
+  body: {
+    name: "body",
+    type: "textarea",
+    placeholder: "Write your article (in markdown)",
+  },
+  tags: {
+    name: "tags",
+    type: "text",
+    placeholder: 'Enter tags, split them with whitespace(" ").',
   },
 };
 const initialFormData = {
@@ -63,7 +74,7 @@ const rules = [
     ],
   },
   {
-    path: "body",
+    path: inputOutline.body.name,
     ruleSet: [
       { rule: "required" },
       {
@@ -83,6 +94,7 @@ const NewArticle = () => {
   const user = useSelector(selectUser);
   const token = user.token;
 
+  const dispatch = useDispatch();
   const navigate = useNavigate();
   const articlePageUrl = useSelector(selectArticlePageUrl);
 
@@ -93,6 +105,10 @@ const NewArticle = () => {
       rules,
       initialFormData,
     });
+
+  const alertFunction = (message) => {
+    dispatch(addMessage(message));
+  };
 
   // maybe another slicer for this part?
   const setArticle = (article) => {
@@ -109,7 +125,7 @@ const NewArticle = () => {
   };
 
   useEffect(() => {
-    console.log(article);
+    //console.log(article);
     // if slug is not true, it is new article editor.
     if (slug) {
       // if user have reached this place from article page, we just retrieve state of last article, this is the case most of time
@@ -127,8 +143,9 @@ const NewArticle = () => {
 
   /**/
 
-  const redirectToArticlePage = () => {
-    navigate(`${articlePageUrl}/${slug}`);
+  const redirectToArticlePage = (slugName, verb) => {
+    navigate(`../${articlePageUrl}/${slugName}`);
+    alertFunction(`article succesfully ${verb}.`);
   };
 
   const submitOperation = (e) => {
@@ -136,12 +153,12 @@ const NewArticle = () => {
     if (!isValid) {
       setSubmitFailed(true);
       console.log("form is not valid yet!!");
-      alert("form is not filled.");
+      alertFunction("form is not filled.");
       return;
     }
     // title,  description,  body,  tags,  token
     if (slug) {
-      // title, description, body, token
+      // title, description, body, token, function to run in completion
       updateArticle(
         getValue("title"),
         getValue("description"),
@@ -156,15 +173,10 @@ const NewArticle = () => {
         getValue("description"),
         getValue("body"),
         getValue("tags").split(" "),
-        token
+        token,
+        redirectToArticlePage
       );
   };
-  //bunu ayrı bir fonksiyon yapalım
-  const textAreaOnChange = (event) => {
-    event.target.style.minHeight = `${event.target.scrollHeight}px`;
-    setPathValue("body", event.target.value);
-  };
-
   const prop = {
     setPathValue: setPathValue,
     getValue: getValue,
@@ -178,33 +190,11 @@ const NewArticle = () => {
     <div className="form-container">
       <form className="form" onSubmit={submitOperation}>
         <Inputs object={prop} />
-        <textarea
-          id="new-article-text"
-          className="input"
-          placeholder="Write your article (in markdown)"
-          value={getValue("body")}
-          onChange={(event) => textAreaOnChange(event)}
-        />
-        {getError("body") && submitFailed && (
-          <div className="validataion-error">{getError("body")}</div>
-        )}
-        <input
-          type="text"
-          id="new-article-tags"
-          className="input"
-          placeholder="Enter tags"
-          value={getValue("tags")}
-          onChange={(event) => slug || setPathValue("tags", event.target.value)}
-        />
-        {getError("tags") && submitFailed && (
-          <div className="validataion-error">{getError("tags")}</div>
-        )}
         <input
           type="submit"
           id="new-article-submit"
           className="submit"
           value={slug ? "Edit Article" : "Publish Article"}
-          //onClick={createNewArticle}
         />
       </form>
     </div>
@@ -212,28 +202,3 @@ const NewArticle = () => {
 };
 
 export default NewArticle;
-
-/**
- *         <input
-          type="text"
-          id="new-article-title"
-          className="input"
-          placeholder="Article Title"
-          value={getValue("title")}
-          onChange={(event) => setPathValue("title", event.target.value)}
-        />
-        {getError("title") && submitFailed && (
-          <div className="validataion-error">{getError("title")}</div>
-        )}
-        <input
-          type="text"
-          id="new-article-description"
-          className="input"
-          placeholder="What is this article about?"
-          value={getValue("description")}
-          onChange={(event) => setPathValue("description", event.target.value)}
-        />
-        {getError("description") && submitFailed && (
-          <div className="validataion-error">{getError("description")}</div>
-        )}
- */

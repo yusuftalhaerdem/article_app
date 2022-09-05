@@ -19,7 +19,7 @@ export const navigationSlice = createSlice({
   initialState,
   reducers: {
     changeNavigationTab: (state, action) => {
-      console.log("nav tag change");
+      //console.log("nav tag change");
       state.currentUrl = `${state.linkPrefix}${action.payload}`;
     },
     resetNavigationTab: (state) => {

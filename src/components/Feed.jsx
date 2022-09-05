@@ -75,7 +75,8 @@ export const Feed = () => {
           user.token
         );
       } else if (currentArticleTab === userFeedName) {
-        getUserArticles(user.token, userFeedArticles, setUserFeedArticles);
+        user &&
+          getUserArticles(user.token, userFeedArticles, setUserFeedArticles);
       } else {
         // if filter is tag.
         // adding another state for tag may be better
